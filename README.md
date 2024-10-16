@@ -46,7 +46,7 @@ Repeating segments or values:
 
 ```python
 msg.find("OBX*.3")   # -> A tuple of all obx segments at position 3
-msg.find("ZF1.2)     # -> The repeating field at ZF1.2 as a tuple: ('REPEAT 1', 'REPEAT 2'...)
+msg.find("ZF1.2")     # -> The repeating field at ZF1.2 as a tuple: ('REPEAT 1', 'REPEAT 2'...)
 msg.find("ZF1.4*.3") # -> The third position of the repeating value at ZF1.4: ('1','2')
 msg.find("OBX[3].1") # -> The third obx segment and its value at position 1: 3
 ```
