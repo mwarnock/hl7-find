@@ -2,7 +2,9 @@
 
 HL7-Find is an HL7 v2 parsing library that uses typical HL7 location notation as a means of retrieving values.
 
-This library is not for sending or receiving HL7. Its initial version also does not provide updating/emitting functions.
+This library is not for sending or receiving HL7.
+
+It's distinguishing feature is that it uses common (with some extensions) notation to access and update HL7 v2 messages. For example, to access PID.3.1 simply use `my_message.find('PID.3.1')` instead of inventing syntax in the programming language.
 
 ## Installation
 
