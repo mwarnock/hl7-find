@@ -70,8 +70,8 @@ class TestHL7Message(unittest.TestCase):
         self.assertEqual(self.msg.find("ZF1.4.2"),'sub')
         self.assertEqual(self.msg.find("ZF1.5[3]"),'repeating')
 
-        # self.msg.update("PID.2"["567","John","Doe"])
-        # self.assertEqual(self.msg.find("PID.2.2"),"John")
+        self.msg.update("PID.2",["567","John","Doe"])
+        self.assertEqual(self.msg.find("PID.2.2"),"John")
 
     def test_basic_update(self):
         self.msg.update("MSH.2","New Sending Facility")

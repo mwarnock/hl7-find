@@ -125,7 +125,3 @@ Contributions are welcome via pull request.
 To report issues use github issues.
 
 There is a `test.sh` file that sets the PYTHONPATH so that pytest runs successfully from the root of the project.
-
-# TODO
-
-* fix issue with update when setting structure deeper than segment level
