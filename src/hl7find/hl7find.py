@@ -193,6 +193,17 @@ class HL7Message:
     def copy(self):
         return HL7Message(self.to_string())
 
+    def add_segment(self,seg,value,index=None):
+        if index and type(index) is int: # also filters out 0 which would override MSH
+            head = self._internal_structure[:index+1]
+            tail = self._internal_structure[index:]
+            head[index] = (seg, value)
+            head.extend(tail)
+            self._internal_structure = head
+        else:
+            self._internal_structure.append((seg,value))
+
+
     def update(self,search_string,value):
         if re.match(r"^\w{3}(\[-?\d+\])?(\.-?\d+){0,3}$", search_string) == None:
             raise InvalidHL7FindSyntaxException("update search string must refer to only one location")

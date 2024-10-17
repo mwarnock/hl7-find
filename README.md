@@ -103,6 +103,15 @@ msg.find("ZF1.4.2") # -> 'sub'
 msg.find("ZF1.5[3]") # -> 'repeating'
 ```
 
+### Add Segment
+
+It's also possible to add a segment that doesn't exist. Use the `add_segment` function providing the segment name followed by the initial values. You can also specify a third argument of where (1-N) in the list of segments it should be inserted. It will not override the existing segment of that position but instead move the trailing segments (including the one at the specified index) down one index. The function will not take index 0 as an option as this should already be an MSH segment which is how a message must start.
+
+```python
+msg.add_segment("ZBS",['new','segment',['with','initial','values']]) # -> adds the ZBS segment to the last position
+msg.add_segment("ZCS",['another','segment','right','after','msh'], 1) # -> adds the ZCS segment as the second segment (right after msh)
+```
+
 ### Emit or Copy
 
 `HL7Message`s can be turned back into an HL7 string with the `to_string` function which takes an optional keyword parameter to set the newline/break character (`newline_char='\r'`)
