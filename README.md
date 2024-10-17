@@ -1,6 +1,6 @@
-# HL7-Find
+# HL7Find
 
-HL7-Find is an HL7 v2 parsing library that uses typical HL7 location notation as a means of retrieving values.
+HL7Find is an HL7 v2 parsing library that uses typical HL7 location notation as a means of retrieving values.
 
 This library is not for sending or receiving HL7.
 
