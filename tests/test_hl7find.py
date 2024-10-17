@@ -100,5 +100,12 @@ class TestHL7Message(unittest.TestCase):
         with self.assertRaises(hl7find.InvalidHL7FindSyntaxException):
             self.msg.update("OBX*.1","test")
 
+    def test_add_segment(self):
+        self.msg.add_segment("ZBS",['new','custom','segment'])
+        self.assertEqual(self.msg.find('ZBS.1'),'new')
+
+        self.msg.add_segment("ZCS",['other','custom','segment'],1)
+        self.assertEqual(self.msg._find_segment("ZCS")[0],1)
+
 if __name__ == '__main__':
     unittest.main()
