@@ -20,7 +20,7 @@ class HL7UpdateAttemptTooDeep(Exception):
 
 class HL7Message:
     def __init__(self,message_string, **kwargs):
-        self._options = dict(kwargs,**{'raise_on_ambiguous': True})
+        self._options = dict({'raise_on_ambiguous': True, 'raise_on_index': False},**kwargs)
         self._parsing_elements = list(message_string[3:8])
         self._escape = self._parsing_elements[3]
         self._repeating = self._parsing_elements[2]
@@ -142,26 +142,32 @@ class HL7Message:
                 return (index[0],segments[0][1])
 
     def _find_with_int(self,position, token):
-        if type(position) == tuple: # Return of a repeating set
-            return tuple(map(lambda p: self._find_with_int(p,token), position))
-        if token[-1] == ']':
-            match = re.match(r"^(\d+)\[(\d+)\]$",token)
-            seg_index = self._hl7_index_to_index(int(match.groups()[0]))
-            repeating_index = self._hl7_index_to_index(int(match.groups()[1]))
-            # Could run check to see if postion[seg_index] is a tuple and raise accordingly
-            return list(position)[seg_index][repeating_index]
-        elif token[-1] == '*':
-            index = self._hl7_index_to_index(int(token[:-1]))
-            seg = position[index]
-            return tuple(seg)
-        else:
-            #index = int(token[:-1]) if token[-1] == '*' else int(token)
-            index = self._hl7_index_to_index(int(token))
-            seg = position[index]
-            if type(seg) in [tuple] and self._options.get('raise_on_ambiguous') and token[-1] != '*':
-                raise HL7AmbiguousSegmentException(f"There is more than one value for segment {token} in {position}")
+        try:
+            if type(position) == tuple: # Return of a repeating set
+                return tuple(map(lambda p: self._find_with_int(p,token), position))
+            if token[-1] == ']':
+                match = re.match(r"^(\d+)\[(\d+)\]$",token)
+                seg_index = self._hl7_index_to_index(int(match.groups()[0]))
+                repeating_index = self._hl7_index_to_index(int(match.groups()[1]))
+                # Could run check to see if postion[seg_index] is a tuple and raise accordingly
+                return list(position)[seg_index][repeating_index]
+            elif token[-1] == '*':
+                index = self._hl7_index_to_index(int(token[:-1]))
+                seg = position[index]
+                return tuple(seg)
             else:
-                return seg
+                #index = int(token[:-1]) if token[-1] == '*' else int(token)
+                index = self._hl7_index_to_index(int(token))
+                seg = position[index]
+                if type(seg) in [tuple] and self._options.get('raise_on_ambiguous') and token[-1] != '*':
+                    raise HL7AmbiguousSegmentException(f"There is more than one value for segment {token} in {position}")
+                else:
+                    return seg
+        except IndexError as e:
+            if self._options.get('raise_on_index'):
+                raise e
+            else:
+                return None
 
     def _hl7_index_to_index(self,given_int):
         if given_int == 0:

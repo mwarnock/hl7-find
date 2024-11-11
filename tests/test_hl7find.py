@@ -10,6 +10,7 @@ class TestHL7Message(unittest.TestCase):
         f.close()
         self.hl7_string = hl7_s
         self.msg = hl7find.HL7Message(self.hl7_string)
+        self.loud_msg = hl7find.HL7Message(self.hl7_string,raise_on_index=True)
 
 
     def test_parse(self):
@@ -106,6 +107,13 @@ class TestHL7Message(unittest.TestCase):
 
         self.msg.add_segment("ZCS",['other','custom','segment'],1)
         self.assertEqual(self.msg._find_segment("ZCS")[0],1)
+
+    def test_hide_index_error(self):
+        self.assertEqual(self.msg.find('MSH.100'),None)
+
+    def test_raise_index_error(self):
+        with self.assertRaises(IndexError):
+            self.loud_msg.find('MSH.100')
 
 if __name__ == '__main__':
     unittest.main()
